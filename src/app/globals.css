@@ -780,7 +780,7 @@ h1, h2, h3, strong, .brand-mark { font-family: var(--font-display); }
 
 .about-scroll-zone {
   position: relative;
-  height: 250vh;
+  height: 160vh;
   width: 100vw;
   margin-left: calc(50% - 50vw);
   border-bottom: 1px solid var(--line);
@@ -1117,8 +1117,8 @@ h1, h2, h3, strong, .brand-mark { font-family: var(--font-display); }
   position: absolute;
   top: clamp(3.5rem, 8vh, 6.5rem);
   left: 50%;
-  transform: translate3d(-50%, calc(var(--about-handoff, 0) * -3.5rem), 0);
-  opacity: calc(1 - var(--about-handoff, 0) * 2.2);
+  transform: translate3d(-50%, 0, 0);
+  opacity: 1;
   width: min(62rem, 92vw);
   text-align: center;
   padding: 0;
@@ -1127,7 +1127,6 @@ h1, h2, h3, strong, .brand-mark { font-family: var(--font-display); }
   border: none;
   border-radius: 0;
   box-shadow: none;
-  will-change: transform, opacity;
 }
 .about-gavel-quote-mark {
   display: block;
