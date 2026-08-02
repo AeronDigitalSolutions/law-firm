@@ -124,41 +124,50 @@ export default function Home() {
 
       <ApproachConfidenceExperience commitments={commitments} principles={principles} />
 
-      <section id="contact" className="contact-section" aria-labelledby="contact-title">
-        <Reveal className="contact-title" delay={40}>
-          <p className="section-index">05 / Contact</p>
-          <h2 id="contact-title">A confidential conversation starts here.</h2>
-          <a href="mailto:scmassociates6778@gmail.com" className="button-primary">
+      <footer id="contact" className="site-footer" aria-labelledby="contact-title">
+        <div className="footer-cta">
+          <div>
+            <p className="section-index">05 / Contact</p>
+            <h2 id="contact-title">A confidential conversation starts here.</h2>
+          </div>
+          <a href="mailto:scmassociates6778@gmail.com" className="footer-cta-btn">
             <span>Request consultation</span>
             <b aria-hidden="true">↗</b>
           </a>
-        </Reveal>
+        </div>
 
-        <Reveal className="contact-details" delay={120}>
-          <div>
+        <div className="footer-grid">
+          <div className="footer-col">
             <span>Office</span>
             <p>
               Office No. 308, Maatr Skye,<br />
-              Kalyan (West), Maharashtra - 421301
+              Kalyan (West), Maharashtra&nbsp;–&nbsp;421301
             </p>
           </div>
-          <div>
+          <div className="footer-col">
             <span>Write</span>
             <a href="mailto:scmassociates6778@gmail.com">scmassociates6778@gmail.com</a>
             <a href="mailto:scm.rahulm@gmail.com">scm.rahulm@gmail.com</a>
           </div>
-          <div>
+          <div className="footer-col">
             <span>Call</span>
             <a href="tel:+919167830006">+91 91678 30006</a>
             <a href="tel:+919819550005">+91 98195 50005</a>
             <a href="tel:+919820220138">+91 98202 20138</a>
           </div>
-        </Reveal>
-      </section>
+          <div className="footer-col">
+            <span>Navigate</span>
+            <a href="#about">The firm</a>
+            <a href="#practice">Capabilities</a>
+            <a href="#approach">Our approach</a>
+            <a href="#contact">Contact</a>
+          </div>
+        </div>
 
-      <footer className="footer-bar">
-        <span>SCM Associates</span>
-        <span>Committed to justice. Dedicated to excellence.</span>
+        <div className="footer-bottom">
+          <span>© {new Date().getFullYear()} SCM Associates</span>
+          <span>Committed to justice. Dedicated to excellence.</span>
+        </div>
       </footer>
     </main>
   );
