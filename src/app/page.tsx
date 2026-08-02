@@ -1,4 +1,5 @@
 import { AboutExperience } from "@/components/about-experience";
+import { ApproachConfidenceExperience } from "@/components/approach-confidence-experience";
 import { HeroExperience } from "@/components/hero-experience";
 import { Reveal } from "@/components/reveal";
 
@@ -121,63 +122,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="approach" className="section approach-section" aria-labelledby="approach-title">
-        <Reveal className="approach-quote" delay={40}>
-          <p className="section-index">03 / Our approach</p>
-          <h2 id="approach-title">
-            “Practical, result-oriented legal solutions aligned with each
-            client&apos;s commercial reality.”
-          </h2>
-          <span className="quote-tail" aria-hidden="true">—</span>
-        </Reveal>
-
-        <Reveal className="approach-architecture" delay={110}>
-          <ColumnStage />
-        </Reveal>
-
-        <div className="commitment-list">
-          {commitments.map((commitment, index) => (
-            <Reveal className="commitment" delay={100 + index * 80} key={commitment.value}>
-              <span>0{index + 1}</span>
-              <strong>{commitment.value}</strong>
-              <p>{commitment.label}</p>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      <section className="reputation-section" aria-labelledby="reputation-title">
-        <div className="reputation-card">
-          <Reveal className="reputation-copy" delay={40}>
-            <p className="section-index">04 / Client confidence</p>
-            <h2 id="reputation-title">
-              Long-term relationships built on trust, professionalism, and results.
-            </h2>
-            <a href="#contact" className="text-link">
-              Our commitment to you <span aria-hidden="true">→</span>
-            </a>
-          </Reveal>
-          <Reveal className="confidence-architecture" delay={100}>
-            <ColumnStage />
-          </Reveal>
-          <Reveal className="reputation-note" delay={140}>
-            <p>
-              SCM Associates continues to advise corporate houses, business groups,
-              entrepreneurs, financial institutions, and individual stakeholders who
-              value measured legal judgment.
-            </p>
-            <span>Continuity matters.</span>
-          </Reveal>
-        </div>
-        <Reveal className="principle-bar" delay={160}>
-          {principles.map((principle, index) => (
-            <span key={principle}>
-              <b>0{index + 1}</b>
-              {principle}
-            </span>
-          ))}
-        </Reveal>
-      </section>
+      <ApproachConfidenceExperience commitments={commitments} principles={principles} />
 
       <section id="contact" className="contact-section" aria-labelledby="contact-title">
         <Reveal className="contact-title" delay={40}>
@@ -216,17 +161,5 @@ export default function Home() {
         <span>Committed to justice. Dedicated to excellence.</span>
       </footer>
     </main>
-  );
-}
-
-function ColumnStage({ className = "" }: { className?: string }) {
-  return (
-    <div className={`column-stage ${className}`.trim()} aria-hidden="true">
-      <span className="stone-column stone-column-back" />
-      <span className="stone-column stone-column-main" />
-      <span className="stone-column stone-column-front" />
-      <span className="stone-steps" />
-      <span className="stone-light" />
-    </div>
   );
 }

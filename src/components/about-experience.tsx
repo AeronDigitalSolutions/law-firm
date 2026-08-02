@@ -18,7 +18,7 @@ type AboutMotion = {
   penVertical: number;
   penDepth: number;
   takeover: number;
-  gavelHandoff: number;
+  handoff: number;
 };
 
 type AboutExperienceProps = {
@@ -29,14 +29,9 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
   const zoneRef = useRef<HTMLElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const penMotionRef = useRef<PenMotion>({ vertical: 0, depth: 0, active: false });
-  const gavelMotionRef = useRef<GavelMotion>({
-    takeover: 0,
-    handoff: 0,
-    active: false,
-  });
+  const gavelMotionRef = useRef<GavelMotion>({ takeover: 0, handoff: 0, active: false });
   const [shouldRenderPen, setShouldRenderPen] = useState(true);
-  const [shouldMountGavel, setShouldMountGavel] = useState(false);
-  const gavelMountRequestedRef = useRef(false);
+  const penDismissedRef = useRef(false);
 
   useEffect(() => {
     let frame = 0;
@@ -47,7 +42,7 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
       penVertical: 0,
       penDepth: 0,
       takeover: 0,
-      gavelHandoff: 0,
+      handoff: 0,
     };
     const current: AboutMotion = { ...target };
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -65,7 +60,7 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
       target.foundation = clamp((progress - 0.52) / 0.16);
       target.penDepth = easeInOutCubic(clamp((progress - 0.6) / 0.16));
       target.takeover = easeInOutCubic(clamp((progress - 0.74) / 0.12));
-      target.gavelHandoff = easeInOutCubic(clamp((progress - 0.8) / 0.2));
+      target.handoff = easeInOutCubic(clamp((progress - 0.85) / 0.13));
     };
 
     const applyMotion = () => {
@@ -81,16 +76,16 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
       penMotionRef.current.vertical = current.penVertical;
       penMotionRef.current.depth = current.penDepth;
       penMotionRef.current.active = current.penVertical > 0.01;
+
       gavelMotionRef.current.takeover = current.takeover;
-      gavelMotionRef.current.handoff = current.gavelHandoff;
-      gavelMotionRef.current.active = current.takeover > 0.76;
+      gavelMotionRef.current.handoff = current.handoff;
+      gavelMotionRef.current.active = current.takeover > 0.01;
 
       // Begin the gavel layer before the handoff is visible so it can travel
       // continuously into the capabilities section without a remount flash.
-      if (current.takeover > 0.76 && !gavelMountRequestedRef.current) {
-        gavelMountRequestedRef.current = true;
+      if (current.takeover > 0.76 && !penDismissedRef.current) {
+        penDismissedRef.current = true;
         setShouldRenderPen(false);
-        setShouldMountGavel(true);
       }
     };
 
@@ -105,8 +100,8 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
         current.foundation = damp(current.foundation, target.foundation, 8, delta);
         current.penVertical = damp(current.penVertical, target.penVertical, 6, delta);
         current.penDepth = damp(current.penDepth, target.penDepth, 6, delta);
-        current.takeover = damp(current.takeover, target.takeover, 5, delta);
-        current.gavelHandoff = damp(current.gavelHandoff, target.gavelHandoff, 8, delta);
+        current.takeover = damp(current.takeover, target.takeover, 12, delta);
+        current.handoff = damp(current.handoff, target.handoff, 12, delta);
       }
 
       applyMotion();
@@ -190,7 +185,7 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
 
         <div className="about-takeover" aria-hidden="true" />
         {shouldRenderPen ? <PenScene motionRef={penMotionRef} /> : null}
-        {shouldMountGavel ? <GavelScene motionRef={gavelMotionRef} /> : null}
+        <GavelScene motionRef={gavelMotionRef} />
         <div className="about-takeover-label" aria-hidden="true">
           <div>
             <span>Measured judgment</span>

@@ -40,26 +40,36 @@ type ViewRect = {
   height: number;
 };
 
-const clamp = (value: number) => Math.min(1, Math.max(0, value));
+const clamp = (v: number) => Math.min(1, Math.max(0, v));
 
-function getSourceRect(viewport: { width: number; height: number }): ViewRect {
-  const width = Math.min(Math.max(viewport.width * 0.32, 360), 560);
-  const height = Math.min(Math.max(viewport.height * 0.48, 360), 540);
+function lerp(a: number, b: number, t: number): number {
+  return a + (b - a) * t;
+}
 
+/** Smooth ease-in-out for the travel curve. */
+function smoothstep(t: number): number {
+  return t * t * (3 - 2 * t);
+}
+
+/** Viewport-centred rect where the gavel begins. */
+function getSourceRect(vp: { width: number; height: number }): ViewRect {
+  const w = Math.min(Math.max(vp.width * 0.32, 360), 560);
+  const h = Math.min(Math.max(vp.height * 0.48, 360), 540);
   return {
-    left: (viewport.width - width) / 2,
-    top: (viewport.height - height) / 2,
-    width,
-    height,
+    left: (vp.width - w) / 2,
+    top: (vp.height - h) / 2,
+    width: w,
+    height: h,
   };
 }
 
-function getFallbackTarget(viewport: { width: number; height: number }): ViewRect {
+/** Fallback when [data-gavel-target] does not exist in the DOM. */
+function getFallbackTarget(vp: { width: number; height: number }): ViewRect {
   return {
-    left: viewport.width * 0.57,
-    top: viewport.height * 0.26,
-    width: viewport.width * 0.31,
-    height: viewport.height * 0.45,
+    left: vp.width * 0.57,
+    top: vp.height * 0.26,
+    width: vp.width * 0.31,
+    height: vp.height * 0.45,
   };
 }
 
@@ -76,40 +86,56 @@ export function GavelScene({ motionRef }: GavelSceneProps) {
 
     const updateLayer = () => {
       const layer = layerRef.current;
-      if (!layer) return;
+      if (!layer) {
+        frame = requestAnimationFrame(updateLayer);
+        return;
+      }
 
-      const viewport = { width: window.innerWidth, height: window.innerHeight };
-      const source = getSourceRect(viewport);
-      const targetElement = document.querySelector<HTMLElement>("[data-gavel-target]");
-      const targetBounds = targetElement?.getBoundingClientRect();
-      const target = targetBounds
-        ? {
-              left: targetBounds.left,
-              top: targetBounds.top,
-              width: targetBounds.width,
-              height: targetBounds.height,
-            }
-        : getFallbackTarget(viewport);
-      const handoff = clamp(motionRef.current.handoff);
-      const sourceCenterX = source.left + source.width / 2;
-      const sourceCenterY = source.top + source.height / 2;
-      const targetCenterX = target.left + target.width / 2;
-      const targetCenterY = target.top + target.height / 2;
-      const targetScale = Math.min(
-        1.08,
-        Math.max(0.82, Math.min(target.width / source.width, target.height / source.height)),
-      );
-      const scale = 1 + (targetScale - 1) * handoff;
-      const offsetX = (targetCenterX - sourceCenterX) * handoff;
-      const offsetY = (targetCenterY - sourceCenterY) * handoff;
+      const vp = { width: window.innerWidth, height: window.innerHeight };
+      const source = getSourceRect(vp);
+      const takeover = clamp(motionRef.current.takeover);
 
-      layer.style.left = `${source.left}px`;
-      layer.style.top = `${source.top}px`;
-      layer.style.width = `${source.width}px`;
-      layer.style.height = `${source.height}px`;
-      layer.style.transform = `translate3d(${offsetX}px, ${offsetY}px, 0) scale(${scale})`;
-      layer.style.clipPath = `circle(${motionRef.current.takeover * 155}vmax at 50% 50%)`;
-      layer.style.opacity = "1";
+      /* ---- Measure target every frame for scroll-locked accuracy ---- */
+      const el = document.querySelector<HTMLElement>("[data-gavel-target]");
+      const tb = el?.getBoundingClientRect();
+      const target: ViewRect = tb
+        ? { left: tb.left, top: tb.top, width: tb.width, height: tb.height }
+        : getFallbackTarget(vp);
+
+      /* ---- Scroll-locked handoff ----
+       * Driven entirely by how far the target element's vertical centre
+       * has risen from the viewport bottom toward the source centre.
+       *
+       *   target centre at / below viewport bottom  →  handoff = 0  (gavel centred)
+       *   target centre at source centre             →  handoff = 1  (gavel at target)
+       *
+       * This means the gavel stays centred on the brown screen until
+       * the practice section actually scrolls into view, then glides
+       * smoothly to the target in lockstep with the scroll.
+       */
+      const srcCY = source.top + source.height / 2;
+      const tgtCY = target.top + target.height / 2;
+      const maxTravel = vp.height - srcCY;
+      const currentTravel = vp.height - tgtCY;
+      const rawHandoff = clamp(currentTravel / Math.max(maxTravel, 1));
+      const handoff = smoothstep(rawHandoff);
+
+      /* ---- Interpolate rect directly (no transform / scale hacks) ---- */
+      const l = lerp(source.left, target.left, handoff);
+      const t = lerp(source.top, target.top, handoff);
+      const w = lerp(source.width, target.width, handoff);
+      const h = lerp(source.height, target.height, handoff);
+
+      layer.style.left = `${l}px`;
+      layer.style.top = `${t}px`;
+      layer.style.width = `${w}px`;
+      layer.style.height = `${h}px`;
+      layer.style.transform = "none";
+      layer.style.clipPath = "none";
+
+      /* Fade in once the brown takeover circle is large enough to
+         fully cover the canvas area — avoids a rectangular flash. */
+      layer.style.opacity = clamp((takeover - 0.45) / 0.35).toFixed(3);
 
       frame = requestAnimationFrame(updateLayer);
     };
@@ -125,6 +151,7 @@ export function GavelScene({ motionRef }: GavelSceneProps) {
       ref={layerRef}
       className="about-gavel gavel-floating-layer"
       aria-label="Three-dimensional judge's gavel"
+      style={{ opacity: 0 }}
     >
       <Canvas
         camera={{ position: [0, 0, 8], fov: 31 }}
