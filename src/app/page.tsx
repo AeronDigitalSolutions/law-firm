@@ -127,8 +127,6 @@ export default function Home() {
         </div>
       </section>
 
-      <ClientsSection />
-
       <ApproachConfidenceExperience commitments={commitments} principles={principles} />
 
       <ContactSection />

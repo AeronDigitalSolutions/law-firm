@@ -1,6 +1,6 @@
 "use client";
 
-const clientLogos = [
+export const clientLogos = [
   {
     name: "ESSAR",
     svg: (

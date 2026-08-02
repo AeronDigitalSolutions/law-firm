@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { GavelScene, type GavelMotion } from "@/components/gavel-scene";
 import { PenScene, type PenMotion } from "@/components/pen-scene";
+import { clientLogos } from "@/components/clients-section";
 
 const clamp = (value: number) => Math.min(1, Math.max(0, value));
 const damp = (value: number, target: number, response: number, delta: number) =>
@@ -239,11 +240,30 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
         <GavelScene motionRef={gavelMotionRef} />
         <div className="about-takeover-label" aria-hidden="true">
           <div className="about-gavel-statement-card">
-            <span className="about-gavel-quote-mark">“</span>
-            <p>
-              SCM Associates advises clients who need legal clarity, courtroom
-              confidence, and commercially sound judgment in the same room.
+            <div className="clients-badge">
+              <span>OUR CLIENTS</span>
+            </div>
+            <h2 className="clients-title">
+              Trusted by Industry Leaders
+            </h2>
+            <p className="clients-subtitle">
+              SCM Associates has been privileged to represent and advise numerous corporate houses,
+              financial institutions, business groups, entrepreneurs, and individual clients across multiple sectors.
             </p>
+            <p className="clients-desc">
+              Our continued association with leading corporate clients reflects the confidence they place in our
+              legal expertise, professionalism, and commitment to delivering exceptional legal services.
+            </p>
+
+            <div className="clients-marquee-wrapper">
+              <div className="clients-marquee-track">
+                {[...clientLogos, ...clientLogos, ...clientLogos].map((client, index) => (
+                  <div key={`${client.name}-${index}`} className="client-logo-card">
+                    {client.svg}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
