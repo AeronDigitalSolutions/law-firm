@@ -1,6 +1,7 @@
 import { AboutExperience } from "@/components/about-experience";
 import { ApproachConfidenceExperience } from "@/components/approach-confidence-experience";
 import { HeroExperience } from "@/components/hero-experience";
+import { Preloader } from "@/components/preloader";
 import { Reveal } from "@/components/reveal";
 
 const practiceAreas = [
@@ -64,6 +65,7 @@ const principles = [
 export default function Home() {
   return (
     <main className="site-shell">
+      <Preloader />
       <div className="page-noise" aria-hidden="true" />
       <a href="#main-content" className="skip-link">
         Skip to content
