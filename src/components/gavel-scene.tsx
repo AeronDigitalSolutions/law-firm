@@ -53,11 +53,23 @@ function smoothstep(t: number): number {
 
 /** Viewport-centred rect where the gavel begins. */
 function getSourceRect(vp: { width: number; height: number }): ViewRect {
+  const slotEl = typeof document !== "undefined" ? document.querySelector<HTMLElement>("[data-gavel-source-slot]") : null;
+  if (slotEl) {
+    const sb = slotEl.getBoundingClientRect();
+    if (sb.width > 0 && sb.height > 0) {
+      return {
+        left: sb.left,
+        top: sb.top,
+        width: sb.width,
+        height: sb.height,
+      };
+    }
+  }
   const w = Math.min(Math.max(vp.width * 0.28, 320), 460);
-  const h = Math.min(Math.max(vp.height * 0.36, 280), 420);
+  const h = Math.min(Math.max(vp.height * 0.24, 200), 280);
   return {
     left: (vp.width - w) / 2,
-    top: vp.height * 0.50,
+    top: vp.height * 0.62,
     width: w,
     height: h,
   };

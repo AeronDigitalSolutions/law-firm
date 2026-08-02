@@ -239,7 +239,7 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
         {shouldRenderPen ? <PenScene motionRef={penMotionRef} /> : null}
         <GavelScene motionRef={gavelMotionRef} />
         <div className="about-takeover-label" aria-hidden="true">
-          <div className="about-gavel-statement-card">
+          <div className="about-gavel-unified-card">
             <div className="clients-badge">
               <span>OUR CLIENTS</span>
             </div>
@@ -264,6 +264,8 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
                 ))}
               </div>
             </div>
+
+            <div className="about-gavel-inline-slot" data-gavel-source-slot />
           </div>
         </div>
       </div>

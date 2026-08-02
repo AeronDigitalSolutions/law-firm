@@ -1113,12 +1113,15 @@ h1, h2, h3, strong, .brand-mark { font-family: var(--font-display); }
 }
 .about-takeover-top-tag i { width: 2.5rem; height: 1px; background: rgba(102, 76, 47, 0.4); }
 
-.about-gavel-statement-card {
+.about-gavel-unified-card {
   position: absolute;
-  top: clamp(1.2rem, 3vh, 2.5rem);
+  top: 50%;
   left: 50%;
-  transform: translate3d(-50%, 0, 0);
-  opacity: 1;
+  transform: translate3d(-50%, -50%, 0);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: min(72rem, 96vw);
   text-align: center;
   padding: 0;
@@ -1129,31 +1132,38 @@ h1, h2, h3, strong, .brand-mark { font-family: var(--font-display); }
   box-shadow: none;
 }
 
-.about-gavel-statement-card .clients-header {
-  margin-bottom: 1rem;
+.about-gavel-unified-card .clients-header {
+  margin-bottom: 0.8rem;
 }
 
-.about-gavel-statement-card .clients-title {
-  font-size: clamp(1.8rem, 3.8vw, 3.2rem);
-  margin-bottom: 0.65rem;
+.about-gavel-unified-card .clients-title {
+  font-size: clamp(1.8rem, 3.6vw, 3.1rem);
+  margin-bottom: 0.5rem;
 }
 
-.about-gavel-statement-card .clients-subtitle {
-  font-size: clamp(0.92rem, 1.4vw, 1.08rem);
+.about-gavel-unified-card .clients-subtitle {
+  font-size: clamp(0.9rem, 1.35vw, 1.05rem);
   max-width: 48rem;
-  margin: 0 auto 0.45rem;
-  line-height: 1.5;
+  margin: 0 auto 0.35rem;
+  line-height: 1.45;
 }
 
-.about-gavel-statement-card .clients-desc {
-  font-size: clamp(0.82rem, 1.15vw, 0.92rem);
+.about-gavel-unified-card .clients-desc {
+  font-size: clamp(0.8rem, 1.1vw, 0.9rem);
   max-width: 46rem;
-  margin: 0 auto 0.9rem;
-  line-height: 1.5;
+  margin: 0 auto 0.75rem;
+  line-height: 1.45;
 }
 
-.about-gavel-statement-card .clients-marquee-wrapper {
-  padding: 0.5rem 0;
+.about-gavel-unified-card .clients-marquee-wrapper {
+  padding: 0.4rem 0;
+  margin-bottom: 0.2rem;
+}
+
+.about-gavel-inline-slot {
+  width: 100%;
+  height: 11rem;
+  pointer-events: none;
 }
 
 .practice-section { background: linear-gradient(155deg, rgba(224, 211, 193, 0.56), rgba(243, 238, 229, 0.15)); }
