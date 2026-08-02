@@ -8,7 +8,7 @@ import ladyJusticeModel from "@/glb/Lady Justice.glb";
 
 const FINAL_Y_ROTATION = -0.55;
 const FULL_TURN = Math.PI * 2;
-const CAMERA_FILL = 1.2;
+const CAMERA_FILL = 0.72;
 
 type HeroSceneProps = {
   progressRef: React.MutableRefObject<number>;
@@ -51,12 +51,11 @@ function JusticeModel({ progressRef, chapterProgressRef, settleProgressRef }: He
     const rawSize = bounds.getSize(new Vector3());
     const center = bounds.getCenter(new Vector3());
 
-    // Normalize once from the untouched GLB. Re-running this calculation on an
-    // already scaled object was causing the visible size to flip on resize.
+    // Scale Lady Justice to fill the height equivalent to the left vertical text block
     const scale = Math.min(
-      4.85 / rawSize.y,
-      5.65 / rawSize.x,
-      5.65 / rawSize.z,
+      7.5 / rawSize.y,
+      8.8 / rawSize.x,
+      8.8 / rawSize.z,
     );
     normalizedModel.position.copy(center).multiplyScalar(-scale);
     normalizedModel.scale.setScalar(scale);
