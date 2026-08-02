@@ -2357,3 +2357,237 @@ h1, h2, h3, strong, .brand-mark { font-family: var(--font-display); }
     align-items: flex-start;
   }
 }
+
+/* ==========================================
+   COMPLETE MOBILE RESPONSIVE DESIGN SYSTEM
+   ========================================== */
+
+@media (max-width: 900px) {
+  /* 1. Header Navigation */
+  .site-shell {
+    width: 100%;
+    padding-top: 0;
+  }
+  
+  .topbar {
+    padding: 0.8rem 1.2rem;
+    min-height: 3.8rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(18, 11, 4, 0.94);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(203, 178, 143, 0.15);
+  }
+
+  .brand-monogram { font-size: 1.5rem; }
+  .brand-copy { font-size: 0.92rem; }
+  .topnav { gap: 0.5rem; }
+  .nav-cta {
+    padding: 0.55rem 0.85rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* 2. Hero Section */
+  .hero-scroll { height: 190vh; }
+  .hero-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem 4rem;
+  }
+  .hero-copy {
+    width: 100%;
+    max-width: 32rem;
+    padding: 0;
+    text-align: center;
+  }
+  .hero-copy h1 {
+    font-size: clamp(2.4rem, 9.5vw, 4.2rem);
+    max-width: 100%;
+    line-height: 1.06;
+  }
+  .hero-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-top: 1rem;
+  }
+  .hero-scene { opacity: 0.4; }
+  .hero-footer {
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+    bottom: 0;
+  }
+  .hero-footer span {
+    padding: 0.75rem 0.85rem;
+    font-size: 0.58rem;
+  }
+
+  /* 3. Section 01 / Leadership */
+  .about-scroll-zone { height: 210vh; }
+  .about-intro {
+    top: 6dvh;
+    left: 1.2rem;
+    right: 1.2rem;
+    width: auto;
+    text-align: center;
+  }
+  .about-intro h2 { font-size: clamp(2.2rem, 8vw, 3.6rem); }
+  .leadership-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+  .leadership-photo-frame {
+    max-width: 100%;
+    aspect-ratio: 4 / 3;
+  }
+  .leadership-card-info { max-width: 100%; }
+  .foundation-bar-motion,
+  .foundation-bar {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+
+  /* 4. Section 02 / Capabilities */
+  .practice-hero {
+    padding: 2.5rem 1.2rem;
+    min-height: auto;
+  }
+  .practice-hero h2 { font-size: clamp(2.2rem, 8vw, 3.5rem); }
+  .practice-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .practice-item {
+    padding: 1.6rem 1.4rem;
+    min-height: auto;
+  }
+
+  /* 5. Section 03 / Our Approach */
+  .ac-zone { height: 220vh; }
+  .ac-approach-copy {
+    top: 2.5rem;
+    width: min(100% - 2.5rem, 36rem);
+  }
+  .ac-approach-copy h2 {
+    font-size: clamp(1.6rem, 5.5vw, 2.4rem);
+    line-height: 1.15;
+  }
+  .ac-commitments {
+    top: 12.5rem;
+    width: min(100% - 2.5rem, 36rem);
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+  .ac-commitment-card {
+    min-height: auto;
+    padding: 1.25rem 1.4rem;
+  }
+
+  /* 6. Section 04 / Client Confidence */
+  .ac-confidence-wrap {
+    inset: 2.5rem 1.25rem 5rem;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    width: 100%;
+    left: 0;
+    transform: none;
+  }
+  .ac-confidence-copy {
+    max-width: 100%;
+    text-align: left;
+    margin-top: 0;
+  }
+  .ac-confidence-copy h2 {
+    font-size: clamp(1.8rem, 6vw, 2.8rem);
+  }
+  .ac-confidence-center-hammer {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 14rem;
+    height: 12rem;
+    margin: 0 auto;
+  }
+  .ac-confidence-visual {
+    width: 100%;
+    margin-top: 0;
+    justify-content: center;
+  }
+  .ac-confidence-image-frame {
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+  .ac-confidence-note {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+    margin-top: -1.5rem;
+    z-index: 10;
+    padding: 1.4rem 1.5rem;
+  }
+
+  /* 7. Section 05 / Contact Section */
+  .contact-section {
+    padding: 4rem 1.25rem 3rem;
+  }
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .contact-headline {
+    font-size: clamp(2rem, 7vw, 3.2rem);
+    margin-bottom: 2rem;
+  }
+  .contact-card {
+    padding: 1.6rem 1.3rem;
+  }
+  .contact-card-title {
+    font-size: 1.2rem;
+    margin-bottom: 1.8rem;
+  }
+  /* Prevent iOS auto-zoom on form inputs */
+  .field-input,
+  .field-select,
+  .field-textarea {
+    font-size: 16px !important;
+  }
+  .contact-footer-bar {
+    flex-direction: column;
+    gap: 0.8rem;
+    text-align: center;
+    margin-top: 3rem;
+  }
+
+  /* 8. Dark Site Footer */
+  .dark-site-footer {
+    padding: 4rem 1.25rem 2.5rem;
+  }
+  .dark-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .dark-footer-logo {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  .dark-footer-desc {
+    font-size: 0.88rem;
+  }
+  .dark-footer-bottom {
+    flex-direction: column;
+    gap: 1.2rem;
+    text-align: center;
+    margin-top: 3.5rem;
+  }
+  .dark-footer-icons {
+    justify-content: center;
+  }
+}
