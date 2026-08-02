@@ -1,5 +1,6 @@
 import { AboutExperience } from "@/components/about-experience";
 import { ApproachConfidenceExperience } from "@/components/approach-confidence-experience";
+import { ClientsSection } from "@/components/clients-section";
 import { ContactSection } from "@/components/contact-section";
 import { HeroExperience } from "@/components/hero-experience";
 import { Preloader } from "@/components/preloader";
@@ -125,6 +126,8 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <ClientsSection />
 
       <ApproachConfidenceExperience commitments={commitments} principles={principles} />
 

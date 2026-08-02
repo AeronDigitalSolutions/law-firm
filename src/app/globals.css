@@ -2590,3 +2590,142 @@ h1, h2, h3, strong, .brand-mark { font-family: var(--font-display); }
     justify-content: center;
   }
 }
+
+/* ==========================================
+   OUR CLIENTS SECTION (INFINITE LOGO TRAIN)
+   ========================================== */
+.clients-section {
+  position: relative;
+  background: var(--paper, #f7f4ee);
+  padding: clamp(4.5rem, 8vh, 7rem) 0 clamp(4.5rem, 8vh, 7rem);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.clients-container {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.clients-header {
+  max-width: 52rem;
+  margin: 0 auto clamp(3rem, 5vh, 4.5rem);
+  text-align: center;
+  padding: 0 1.5rem;
+}
+
+.clients-badge {
+  display: inline-block;
+  margin-bottom: 1.2rem;
+}
+
+.clients-badge span {
+  display: inline-block;
+  color: var(--bronze-deep, #714e2b);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 750;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  position: relative;
+  padding-bottom: 0.4rem;
+}
+
+.clients-badge span::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: var(--bronze, #996e3b);
+  border-radius: 2px;
+}
+
+.clients-title {
+  color: var(--ink, #1a0e05);
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  margin-bottom: 1.25rem;
+  line-height: 1.1;
+}
+
+.clients-subtitle {
+  color: #2c1a0b;
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 1.6vw, 1.18rem);
+  font-weight: 500;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.clients-desc {
+  color: #5a4635;
+  font-family: var(--font-sans);
+  font-size: clamp(0.88rem, 1.3vw, 0.98rem);
+  line-height: 1.65;
+}
+
+.clients-marquee-wrapper {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  overflow: hidden;
+  padding: 1.2rem 0;
+  /* Fade mask on left & right edges */
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.clients-marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 2.2rem;
+  width: max-content;
+  animation: client-marquee-slide 28s linear infinite;
+  will-change: transform;
+}
+
+.clients-marquee-wrapper:hover .clients-marquee-track {
+  animation-play-state: paused;
+}
+
+.client-logo-card {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 15rem;
+  height: 6.8rem;
+  padding: 1rem 1.6rem;
+  background: #ffffff;
+  border: 1px solid rgba(203, 178, 143, 0.32);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(30, 18, 8, 0.05);
+  transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease;
+}
+
+.client-logo-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(203, 178, 143, 0.7);
+  box-shadow: 0 14px 32px rgba(30, 18, 8, 0.12);
+}
+
+.client-logo-card svg {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+@keyframes client-marquee-slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333333%);
+  }
+}
+
