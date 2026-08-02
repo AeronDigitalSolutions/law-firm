@@ -64,15 +64,12 @@ export function HeroExperience() {
       const travel = Math.max(zone.offsetHeight - window.innerHeight, 1);
       const progress = clamp((window.scrollY - zone.offsetTop) / travel);
       target.progress = progress;
-      target.copy = clamp((progress - 0.1) / 0.3);
-      // The text and statue complete their transition together.
+      target.copy = clamp((progress - 0.05) / 0.35);
       target.model = target.copy;
-      target.rail = clamp((progress - 0.48) / 0.22);
-      // The next chapter begins only after the hero reaches its settled state.
-      target.takeover = easeInOutCubic(clamp((progress - 0.7) / 0.1));
-      target.chapter = clamp((progress - 0.8) / 0.12);
-      // The settled composition holds while the statue completes one full final turn.
-      target.settle = clamp((progress - 0.92) / 0.06);
+      target.rail = clamp((progress - 0.4) / 0.25);
+      target.takeover = easeInOutCubic(clamp((progress - 0.65) / 0.15));
+      target.chapter = clamp((progress - 0.78) / 0.14);
+      target.settle = clamp((progress - 0.9) / 0.08);
     };
 
     const applyMotion = () => {
@@ -101,7 +98,7 @@ export function HeroExperience() {
         element.style.setProperty("--hero-align-x", `${-offset * current.copy}px`);
       });
       stage.style.setProperty("--hero-model-y", `${(1 - current.model) * 82}%`);
-      stage.style.setProperty("--hero-rail-x", `${(1 - current.rail) * 9}rem`);
+      stage.style.setProperty("--hero-rail-x", `${(1 - current.rail) * 100}%`);
       // The practice bar enters as one solid panel, without a fade.
       stage.style.setProperty("--hero-footer-y", `${(1 - current.rail) * 108}%`);
     };
@@ -182,22 +179,61 @@ export function HeroExperience() {
           />
         </div>
 
-        <aside className="hero-rail" aria-label="Firm principles">
-          <span>Global perspective</span>
+        <aside className="hero-rail" aria-label="Practice focus areas">
+          <span>Litigation</span>
           <i aria-hidden="true" />
-          <span>Local knowledge</span>
+          <span>Corporate</span>
           <i aria-hidden="true" />
-          <span>Discreet by design</span>
+          <span>Regulatory</span>
           <i aria-hidden="true" />
-          <span>Focused on outcomes</span>
+          <span>Financial institutions</span>
+          <i aria-hidden="true" />
+          <span>Private client</span>
         </aside>
 
-        <div className="hero-footer" aria-label="Practice focus">
-          <span>Litigation</span>
-          <span>Corporate</span>
-          <span>Regulatory</span>
-          <span>Financial institutions</span>
-          <span>Private client</span>
+        <div className="hero-ticker-bar" aria-label="Firm principles">
+          <div className="hero-ticker-track">
+            <div className="hero-ticker-content">
+              <span>GLOBAL PERSPECTIVE</span>
+              <i aria-hidden="true">•</i>
+              <span>LOCAL KNOWLEDGE</span>
+              <i aria-hidden="true">•</i>
+              <span>DISCREET BY DESIGN</span>
+              <i aria-hidden="true">•</i>
+              <span>FOCUSED ON OUTCOMES</span>
+              <i aria-hidden="true">•</i>
+            </div>
+            <div className="hero-ticker-content" aria-hidden="true">
+              <span>GLOBAL PERSPECTIVE</span>
+              <i aria-hidden="true">•</i>
+              <span>LOCAL KNOWLEDGE</span>
+              <i aria-hidden="true">•</i>
+              <span>DISCREET BY DESIGN</span>
+              <i aria-hidden="true">•</i>
+              <span>FOCUSED ON OUTCOMES</span>
+              <i aria-hidden="true">•</i>
+            </div>
+            <div className="hero-ticker-content" aria-hidden="true">
+              <span>GLOBAL PERSPECTIVE</span>
+              <i aria-hidden="true">•</i>
+              <span>LOCAL KNOWLEDGE</span>
+              <i aria-hidden="true">•</i>
+              <span>DISCREET BY DESIGN</span>
+              <i aria-hidden="true">•</i>
+              <span>FOCUSED ON OUTCOMES</span>
+              <i aria-hidden="true">•</i>
+            </div>
+            <div className="hero-ticker-content" aria-hidden="true">
+              <span>GLOBAL PERSPECTIVE</span>
+              <i aria-hidden="true">•</i>
+              <span>LOCAL KNOWLEDGE</span>
+              <i aria-hidden="true">•</i>
+              <span>DISCREET BY DESIGN</span>
+              <i aria-hidden="true">•</i>
+              <span>FOCUSED ON OUTCOMES</span>
+              <i aria-hidden="true">•</i>
+            </div>
+          </div>
         </div>
 
         <div className="hero-takeover" aria-hidden="true" />
@@ -229,9 +265,11 @@ export function HeroExperience() {
 function HeroCopy({ copyRef }: { copyRef: RefObject<HTMLDivElement | null> }) {
   return (
     <div ref={copyRef} className="hero-copy">
-      <p className="hero-kicker" data-hero-align>
-        Advocates <span>/</span> Legal consultants <span>/</span> Corporate advisors
-      </p>
+      <div className="hero-kicker-pills" data-hero-align>
+        <span>Advocates</span>
+        <span>Legal Consultants</span>
+        <span>Corporate Advisors</span>
+      </div>
       <h1 id="hero-title">
         <span className="hero-title-line" data-hero-align>Legal clarity</span>
         <span className="hero-title-line" data-hero-align>when the</span>
@@ -247,6 +285,11 @@ function HeroCopy({ copyRef }: { copyRef: RefObject<HTMLDivElement | null> }) {
         <span>Request consultation</span>
         <b aria-hidden="true">↗</b>
       </a>
+      <div className="hero-scroll-chevron" data-hero-align aria-hidden="true">
+        <svg width="18" height="10" viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L9 9L17 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </div>
     </div>
   );
 }

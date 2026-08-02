@@ -186,8 +186,8 @@ function PenModel({ motionRef }: { motionRef: React.MutableRefObject<PenMotion> 
   useLayoutEffect(() => {
     if (!positionGroup.current || !orientationGroup.current) return;
 
-    positionGroup.current.position.set(viewport.width * 0.3, viewport.height * 0.06, 0);
-    positionGroup.current.scale.setScalar(0.64);
+    positionGroup.current.position.set(viewport.width * 0.36, -viewport.height * 0.23, 0);
+    positionGroup.current.scale.setScalar(0.72);
     orientationGroup.current.quaternion.copy(initialOrientation);
   }, [initialOrientation, viewport.height, viewport.width]);
 
@@ -195,8 +195,8 @@ function PenModel({ motionRef }: { motionRef: React.MutableRefObject<PenMotion> 
     if (!positionGroup.current || !orientationGroup.current || !spinGroup.current) return;
 
     const { vertical, depth, active } = motionRef.current;
-    const initialX = viewport.width * 0.3;
-    const initialY = viewport.height * 0.06;
+    const initialX = viewport.width * 0.36;
+    const initialY = -viewport.height * 0.23;
 
     // The imported pen is diagonal on its own axes. Align it once, then animate
     // predictable screen-space poses: diagonal, vertical, and finally depth-facing.

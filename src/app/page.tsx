@@ -1,8 +1,10 @@
 import { AboutExperience } from "@/components/about-experience";
 import { ApproachConfidenceExperience } from "@/components/approach-confidence-experience";
+import { ContactSection } from "@/components/contact-section";
 import { HeroExperience } from "@/components/hero-experience";
 import { Preloader } from "@/components/preloader";
 import { Reveal } from "@/components/reveal";
+import { SiteFooter } from "@/components/site-footer";
 
 const practiceAreas = [
   {
@@ -91,7 +93,7 @@ export default function Home() {
 
       <div id="main-content" />
 
-      <AboutExperience principles={principles.slice(0, 3)} />
+      <AboutExperience principles={principles} />
 
       <section id="practice" className="section practice-section" aria-labelledby="practice-title">
         <Reveal className="practice-hero">
@@ -101,8 +103,8 @@ export default function Home() {
               Counsel calibrated for the matter in front of you.
             </h2>
             <p>
-              Integrated expertise and practical insight for matters that shape your
-              business and private interests.
+              SCM Associates advises clients who need legal clarity, courtroom
+              confidence, and commercially sound judgment in the same room.
             </p>
           </div>
           <div className="practice-gavel-target" data-gavel-target aria-hidden="true" />
@@ -126,51 +128,8 @@ export default function Home() {
 
       <ApproachConfidenceExperience commitments={commitments} principles={principles} />
 
-      <footer id="contact" className="site-footer" aria-labelledby="contact-title">
-        <div className="footer-cta">
-          <div>
-            <p className="section-index">05 / Contact</p>
-            <h2 id="contact-title">A confidential conversation starts here.</h2>
-          </div>
-          <a href="mailto:scmassociates6778@gmail.com" className="footer-cta-btn">
-            <span>Request consultation</span>
-            <b aria-hidden="true">↗</b>
-          </a>
-        </div>
-
-        <div className="footer-grid">
-          <div className="footer-col">
-            <span>Office</span>
-            <p>
-              Office No. 308, Maatr Skye,<br />
-              Kalyan (West), Maharashtra&nbsp;–&nbsp;421301
-            </p>
-          </div>
-          <div className="footer-col">
-            <span>Write</span>
-            <a href="mailto:scmassociates6778@gmail.com">scmassociates6778@gmail.com</a>
-            <a href="mailto:scm.rahulm@gmail.com">scm.rahulm@gmail.com</a>
-          </div>
-          <div className="footer-col">
-            <span>Call</span>
-            <a href="tel:+919167830006">+91 91678 30006</a>
-            <a href="tel:+919819550005">+91 98195 50005</a>
-            <a href="tel:+919820220138">+91 98202 20138</a>
-          </div>
-          <div className="footer-col">
-            <span>Navigate</span>
-            <a href="#about">The firm</a>
-            <a href="#practice">Capabilities</a>
-            <a href="#approach">Our approach</a>
-            <a href="#contact">Contact</a>
-          </div>
-        </div>
-
-        <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} SCM Associates</span>
-          <span>Committed to justice. Dedicated to excellence.</span>
-        </div>
-      </footer>
+      <ContactSection />
+      <SiteFooter />
     </main>
   );
 }

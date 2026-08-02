@@ -94,9 +94,8 @@ function JusticeModel({ progressRef, chapterProgressRef, settleProgressRef }: He
   useLayoutEffect(() => {
     if (!group.current || didInitialize.current) return;
 
-    // Render the opening frame below the fold before the first animation frame.
-    // This prevents the statue from flashing in the center on page load.
-    group.current.position.set(viewport.width * 0.16, -viewport.height * 1.08, 0);
+    // Lower initial Y position so the statue is fully below the canvas frame at rest
+    group.current.position.set(viewport.width * 0.16, -viewport.height * 2.2, 0);
     group.current.scale.setScalar(1);
     didInitialize.current = true;
   }, [viewport.height, viewport.width]);
@@ -107,11 +106,15 @@ function JusticeModel({ progressRef, chapterProgressRef, settleProgressRef }: He
     const progress = progressRef.current;
     const chapterProgress = chapterProgressRef.current;
     const settleProgress = settleProgressRef.current;
+
+    // Only render statue once user begins scrolling into hero motion
+    group.current.visible = progress > 0.005 || chapterProgress > 0;
+
     // Keep the complete figure inside the canvas in both chapters. The model
     // moves between composed positions rather than the canvas being translated.
     const heroX = viewport.width * 0.16;
     const chapterX = -viewport.width * 0.17;
-    const enteringY = -viewport.height * 1.08;
+    const enteringY = -viewport.height * 2.2;
     const chapterY = -viewport.height * 0.04;
     const chapterScale = MathUtils.lerp(1, 1.06, chapterProgress);
     const breath = Math.sin(state.clock.elapsedTime * 0.42) * 0.012 * (1 - chapterProgress * 0.35);

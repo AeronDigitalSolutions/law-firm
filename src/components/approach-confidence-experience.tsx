@@ -193,7 +193,7 @@ export function ApproachConfidenceExperience({
       const travel = Math.max(node.offsetHeight - window.innerHeight, 1);
       const progress = clamp(-rect.top / travel);
       const nextPhase: Phase =
-        progress < 0.43 ? "approach" : progress < 0.54 ? "transition" : "confidence";
+        progress < 0.40 ? "approach" : progress < 0.52 ? "transition" : "confidence";
 
       setPhase((current) => (current === nextPhase ? current : nextPhase));
     };
@@ -231,47 +231,77 @@ export function ApproachConfidenceExperience({
             <h2 id="approach-title">
               “Practical, result-oriented legal solutions aligned with each client&apos;s commercial reality.”
             </h2>
-            <span className="ac-tail" aria-hidden="true" />
           </article>
 
           <div className="ac-commitments" aria-label="Our approach principles">
             {commitments.map((commitment, index) => (
-              <article className="ac-commitment" key={commitment.value}>
-                <span>0{index + 1}</span>
-                <div>
-                  <strong>{commitment.value}</strong>
-                  <p>{commitment.label}</p>
+              <article className="ac-commitment-card" key={commitment.value}>
+                <div className="ac-card-icon-frame">
+                  {index === 0 && (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M12 3v18M3 9l9-6 9 6M3 9l3 7h12l3-7" />
+                    </svg>
+                  )}
+                  {index === 1 && (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M3 17l6-6 4 4 8-8M21 7v6h-6" />
+                    </svg>
+                  )}
+                  {index === 2 && (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <rect x="5" y="11" width="14" height="10" rx="2" />
+                      <path d="M8 11V7a4 4 0 018 0v4" />
+                    </svg>
+                  )}
                 </div>
+                <h3>{commitment.value}</h3>
+                <p>{commitment.label}</p>
               </article>
             ))}
           </div>
 
-          <article className="ac-confidence-copy">
-            <p className="section-index">04 / Client confidence</p>
-            <h2 id="reputation-title">
-              Long-term relationships built on trust, professionalism, and results.
-            </h2>
-            <a className="ac-text-link" href="#contact">
-              Our commitment to you <span aria-hidden="true">→</span>
-            </a>
-          </article>
+          <div className="ac-confidence-wrap">
+            <article className="ac-confidence-copy">
+              <p className="section-index">04 / Client confidence</p>
+              <h2 id="reputation-title">
+                Long-term relationships built on trust, professionalism, and results.
+              </h2>
+              <a className="ac-text-link" href="#contact">
+                Our commitment to you <span aria-hidden="true">→</span>
+              </a>
+            </article>
 
-          <aside className="ac-confidence-note">
-            <p>
-              SCM Associates continues to advise corporate houses, business groups,
-              entrepreneurs, financial institutions, and individual stakeholders who value
-              measured legal judgment.
-            </p>
-            <span>Continuity matters.</span>
-          </aside>
+            <div className="ac-confidence-center-hammer" aria-hidden="true">
+              <GavelCanvas active={phase === "confidence"} />
+            </div>
+
+            <div className="ac-confidence-visual">
+              <div className="ac-confidence-image-frame">
+                <img
+                  src="/images/law-firm-confidence-consultation.jpg"
+                  alt="SCM Associates client consultation room"
+                  className="ac-confidence-image"
+                />
+              </div>
+
+              <aside className="ac-confidence-note">
+                <p>
+                  SCM Associates continues to advise corporate houses, business groups,
+                  entrepreneurs, financial institutions, and individual stakeholders who value
+                  measured legal judgment.
+                </p>
+                <span>Continuity matters.</span>
+              </aside>
+            </div>
+          </div>
         </div>
 
         <div className="ac-principle-bar" aria-label="Client confidence principles">
           {principles.map((principle, index) => (
-            <span key={principle}>
-              <b>0{index + 1}</b>
-              {principle}
-            </span>
+            <div className="ac-principle-item" key={principle}>
+              <span className="ac-principle-num">0{index + 1}</span>
+              <span className="ac-principle-text">{principle}</span>
+            </div>
           ))}
         </div>
       </div>

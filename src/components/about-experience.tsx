@@ -54,13 +54,13 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
       const travel = Math.max(zone.offsetHeight - window.innerHeight, 1);
       const progress = clamp((window.scrollY - zone.offsetTop) / travel);
 
-      // The pen crosses the visual center before the leadership screen settles.
-      target.grid = clamp((progress - 0.2) / 0.18);
-      target.penVertical = easeInOutCubic(clamp((progress - 0.28) / 0.18));
-      target.foundation = clamp((progress - 0.52) / 0.16);
-      target.penDepth = easeInOutCubic(clamp((progress - 0.6) / 0.16));
-      target.takeover = easeInOutCubic(clamp((progress - 0.74) / 0.12));
-      target.handoff = easeInOutCubic(clamp((progress - 0.85) / 0.13));
+      // Responsive, smooth scroll thresholds
+      target.grid = clamp((progress - 0.08) / 0.32);
+      target.penVertical = easeInOutCubic(clamp((progress - 0.12) / 0.32));
+      target.foundation = clamp((progress - 0.4) / 0.3);
+      target.penDepth = easeInOutCubic(clamp((progress - 0.45) / 0.3));
+      target.takeover = easeInOutCubic(clamp((progress - 0.72) / 0.18));
+      target.handoff = easeInOutCubic(clamp((progress - 0.84) / 0.16));
     };
 
     const applyMotion = () => {
@@ -73,6 +73,7 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
       panel.style.setProperty("--about-grid-y", `${(1 - current.grid) * 118}dvh`);
       panel.style.setProperty("--about-foundation-y", `${(1 - current.foundation) * 135}%`);
       panel.style.setProperty("--about-takeover", `${current.takeover * 155}vmax`);
+      panel.style.setProperty("--about-handoff", current.handoff.toFixed(3));
       penMotionRef.current.vertical = current.penVertical;
       penMotionRef.current.depth = current.penDepth;
       penMotionRef.current.active = current.penVertical > 0.01;
@@ -83,9 +84,16 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
 
       // Begin the gavel layer before the handoff is visible so it can travel
       // continuously into the capabilities section without a remount flash.
-      if (current.takeover > 0.76 && !penDismissedRef.current) {
-        penDismissedRef.current = true;
-        setShouldRenderPen(false);
+      if (current.takeover > 0.76) {
+        if (!penDismissedRef.current) {
+          penDismissedRef.current = true;
+          setShouldRenderPen(false);
+        }
+      } else {
+        if (penDismissedRef.current) {
+          penDismissedRef.current = false;
+          setShouldRenderPen(true);
+        }
       }
     };
 
@@ -138,38 +146,81 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
     <section ref={zoneRef} id="about" className="about-scroll-zone" aria-labelledby="about-title">
       <div ref={panelRef} className="about-scroll-panel">
         <div className="about-intro">
-          <p className="section-index">01 / The firm</p>
-          <h2 id="about-title">
-            A practice built on continuity, judgment, and courtroom confidence.
-          </h2>
-        </div>
-
-        <div className="about-grid about-grid-motion">
-          <div className="about-statement">
-            <p>
-              SCM Associates advises clients who need legal clarity, courtroom
-              confidence, and commercially sound judgment in the same room.
-            </p>
+          <div className="about-intro-left">
+            <p className="section-index">01 / The firm</p>
+            <h2 id="about-title">
+              A practice built on continuity, judgment, and courtroom confidence.
+            </h2>
           </div>
 
-          <div className="monogram-stage" aria-hidden="true" />
+          <div className="about-intro-right">
+            <div className="about-firm-photo-frame">
+              <div className="about-firm-photo-inner">
+                <img
+                  src="/images/firm-consultation-portrait.jpg"
+                  alt="SCM Associates partner consultation room"
+                  className="about-firm-photo"
+                />
+              </div>
+              <div className="about-quote-card">
+                <span className="about-quote-symbol" aria-hidden="true">”</span>
+                <blockquote className="about-quote-body">
+                  <p>&ldquo;Justice delayed is justice denied.&rdquo;</p>
+                  <cite>William E. Gladstone</cite>
+                </blockquote>
+              </div>
+            </div>
+          </div>
+        </div>
 
-          <div className="leadership-note">
-            <article>
-              <span>Established by</span>
-              <h3>Adv. Sanjeev C. Mishra</h3>
-              <p>
-                More than three decades of representation, practical legal thinking,
-                and trusted client counsel.
-              </p>
+        <div className="about-grid about-grid-motion leadership-dark-container">
+          <div className="leadership-header-row">
+            <div className="leadership-header-left">
+              <p className="section-index">02 / Leadership</p>
+              <h2>Founded on institutional wisdom.</h2>
+            </div>
+            <div className="leadership-header-right">
+              <span>KALYAN &bull; MUMBAI &bull; MAHARASHTRA</span>
+            </div>
+          </div>
+
+          <div className="leadership-cards-grid">
+            <article className="leadership-card leadership-card-founder">
+              <div className="leadership-photo-frame">
+                <img
+                  src="/images/sanjeev-mishra-portrait.png"
+                  alt="Adv. Sanjeev C. Mishra"
+                  className="leadership-photo"
+                />
+              </div>
+              <div className="leadership-card-info">
+                <span className="leadership-role-tag">FOUNDER & SENIOR PARTNER</span>
+                <h3>Adv. Sanjeev C. Mishra</h3>
+                <p>
+                  More than three decades of representation, practical legal thinking,
+                  and trusted client counsel. A veteran of the courts with a focus on civil
+                  litigation and corporate strategy.
+                </p>
+              </div>
             </article>
-            <article>
-              <span>Jointly led with</span>
-              <h3>Adv. Rahul S. Mishra</h3>
-              <p>
-                A contemporary, business-aware approach grounded in institutional
-                legal wisdom.
-              </p>
+
+            <article className="leadership-card leadership-card-managing">
+              <div className="leadership-photo-frame">
+                <img
+                  src="/images/rahul-mishra-portrait.png"
+                  alt="Adv. Rahul S. Mishra"
+                  className="leadership-photo"
+                />
+              </div>
+              <div className="leadership-card-info">
+                <span className="leadership-role-tag">MANAGING PARTNER</span>
+                <h3>Adv. Rahul S. Mishra</h3>
+                <p>
+                  A contemporary, business-aware approach grounded in institutional
+                  legal wisdom. Specialized in financial recovery, regulatory compliance,
+                  and private client advisory.
+                </p>
+              </div>
             </article>
           </div>
         </div>
@@ -187,10 +238,12 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
         {shouldRenderPen ? <PenScene motionRef={penMotionRef} /> : null}
         <GavelScene motionRef={gavelMotionRef} />
         <div className="about-takeover-label" aria-hidden="true">
-          <div>
-            <span>Measured judgment</span>
-            <i />
-            <span>Decisive action</span>
+          <div className="about-gavel-statement-card">
+            <span className="about-gavel-quote-mark">“</span>
+            <p>
+              SCM Associates advises clients who need legal clarity, courtroom
+              confidence, and commercially sound judgment in the same room.
+            </p>
           </div>
         </div>
       </div>

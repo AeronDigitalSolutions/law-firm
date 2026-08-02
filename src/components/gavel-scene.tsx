@@ -53,11 +53,11 @@ function smoothstep(t: number): number {
 
 /** Viewport-centred rect where the gavel begins. */
 function getSourceRect(vp: { width: number; height: number }): ViewRect {
-  const w = Math.min(Math.max(vp.width * 0.32, 360), 560);
-  const h = Math.min(Math.max(vp.height * 0.48, 360), 540);
+  const w = Math.min(Math.max(vp.width * 0.28, 320), 460);
+  const h = Math.min(Math.max(vp.height * 0.36, 280), 420);
   return {
     left: (vp.width - w) / 2,
-    top: (vp.height - h) / 2,
+    top: vp.height * 0.50,
     width: w,
     height: h,
   };
