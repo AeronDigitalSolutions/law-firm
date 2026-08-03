@@ -5,6 +5,7 @@ import { ContactSection } from "@/components/contact-section";
 import { HeroExperience } from "@/components/hero-experience";
 import { Preloader } from "@/components/preloader";
 import { Reveal } from "@/components/reveal";
+import { PracticeTile } from "@/components/practice-tile";
 import { SiteFooter } from "@/components/site-footer";
 
 const practiceAreas = [
@@ -79,16 +80,18 @@ export default function Home() {
           <img src="/images/logo.PNG" alt="SCM Associates Advocates & Legal Consultants" className="brand-logo-img" />
         </a>
 
-        <nav className="topnav-center" aria-label="Primary navigation">
-          <a href="#about">Who we are</a>
-          <a href="#practice">Practices</a>
-          <a href="#approach">Our approach</a>
-        </nav>
+        <div className="header-actions">
+          <nav className="topnav-center" aria-label="Primary navigation">
+            <a href="#about">Who we are</a>
+            <a href="#practice">Practices</a>
+            <a href="#approach">Our approach</a>
+          </nav>
 
-        <div className="topnav-right">
-          <a href="#contact" className="nav-cta">
-            Request consultation <span aria-hidden="true">↗</span>
-          </a>
+          <div className="topnav-right">
+            <a href="#contact" className="nav-cta">
+              Request consultation <span aria-hidden="true">↗</span>
+            </a>
+          </div>
         </div>
       </header>
 
@@ -117,16 +120,12 @@ export default function Home() {
 
         <div className="practice-grid">
           {practiceAreas.map((area, index) => (
-            <Reveal
-              className={`practice-item practice-item-${index + 1}`}
-              delay={index * 60}
+            <PracticeTile
               key={area.title}
-            >
-              <span>0{index + 1}</span>
-              <h3>{area.title}</h3>
-              <p>{area.description}</p>
-              <i aria-hidden="true" />
-            </Reveal>
+              title={area.title}
+              description={area.description}
+              index={index}
+            />
           ))}
         </div>
       </section>

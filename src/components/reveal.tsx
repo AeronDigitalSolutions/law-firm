@@ -2,13 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 
-type RevealProps = {
+type RevealProps = React.HTMLAttributes<HTMLDivElement> & {
   children: React.ReactNode;
   className?: string;
   delay?: number;
 };
 
-export function Reveal({ children, className = "", delay = 0 }: RevealProps) {
+export function Reveal({ children, className = "", delay = 0, style, ...props }: RevealProps) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
 
@@ -36,9 +36,10 @@ export function Reveal({ children, className = "", delay = 0 }: RevealProps) {
 
   return (
     <div
+      {...props}
       ref={ref}
       className={`reveal ${visible ? "is-visible" : ""} ${className}`.trim()}
-      style={{ transitionDelay: `${delay}ms` }}
+      style={{ ...style, transitionDelay: `${delay}ms` }}
     >
       {children}
     </div>

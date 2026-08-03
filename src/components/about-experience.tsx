@@ -17,6 +17,7 @@ type AboutMotion = {
   grid: number;
   foundation: number;
   penVertical: number;
+  penDrop: number;
   penDepth: number;
   takeover: number;
   handoff: number;
@@ -29,7 +30,14 @@ type AboutExperienceProps = {
 export function AboutExperience({ principles }: AboutExperienceProps) {
   const zoneRef = useRef<HTMLElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
-  const penMotionRef = useRef<PenMotion>({ vertical: 0, depth: 0, active: false });
+  const penMotionRef = useRef<PenMotion>({
+    vertical: 0,
+    drop: 0,
+    depth: 0,
+    active: false,
+    tipX: 50,
+    tipY: 50,
+  });
   const gavelMotionRef = useRef<GavelMotion>({ takeover: 0, handoff: 0, active: false });
   const [shouldRenderPen, setShouldRenderPen] = useState(true);
   const penDismissedRef = useRef(false);
@@ -41,6 +49,7 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
       grid: 0,
       foundation: 0,
       penVertical: 0,
+      penDrop: 0,
       penDepth: 0,
       takeover: 0,
       handoff: 0,
@@ -55,13 +64,15 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
       const travel = Math.max(zone.offsetHeight - window.innerHeight, 1);
       const progress = clamp((window.scrollY - zone.offsetTop) / travel);
 
-      // Responsive, smooth scroll thresholds
-      target.grid = clamp((progress - 0.08) / 0.32);
-      target.penVertical = easeInOutCubic(clamp((progress - 0.12) / 0.32));
-      target.foundation = clamp((progress - 0.4) / 0.3);
-      target.penDepth = easeInOutCubic(clamp((progress - 0.45) / 0.3));
-      target.takeover = easeInOutCubic(clamp((progress - 0.72) / 0.18));
-      target.handoff = easeInOutCubic(clamp((progress - 0.84) / 0.16));
+      // Deliberate pen choreography: align vertically, hold, descend, hold,
+      // then open the takeover circle. Each phase owns its own scroll range.
+      target.grid = clamp((progress - 0.05) / 0.2);
+      target.penVertical = easeInOutCubic(clamp((progress - 0.18) / 0.2));
+      target.foundation = clamp((progress - 0.32) / 0.16);
+      target.penDrop = easeInOutCubic(clamp((progress - 0.48) / 0.18));
+      target.penDepth = 0;
+      target.takeover = easeInOutCubic(clamp((progress - 0.8) / 0.12));
+      target.handoff = easeInOutCubic(clamp((progress - 0.92) / 0.08));
     };
 
     const applyMotion = () => {
@@ -74,8 +85,11 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
       panel.style.setProperty("--about-grid-y", `${(1 - current.grid) * 118}dvh`);
       panel.style.setProperty("--about-foundation-y", `${(1 - current.foundation) * 135}%`);
       panel.style.setProperty("--about-takeover", `${current.takeover * 155}vmax`);
+      panel.style.setProperty("--about-takeover-x", `${penMotionRef.current.tipX.toFixed(3)}%`);
+      panel.style.setProperty("--about-takeover-y", `${penMotionRef.current.tipY.toFixed(3)}%`);
       panel.style.setProperty("--about-handoff", current.handoff.toFixed(3));
       penMotionRef.current.vertical = current.penVertical;
+      penMotionRef.current.drop = current.penDrop;
       penMotionRef.current.depth = current.penDepth;
       penMotionRef.current.active = current.penVertical > 0.01;
 
@@ -108,6 +122,7 @@ export function AboutExperience({ principles }: AboutExperienceProps) {
         current.grid = damp(current.grid, target.grid, 7, delta);
         current.foundation = damp(current.foundation, target.foundation, 8, delta);
         current.penVertical = damp(current.penVertical, target.penVertical, 6, delta);
+        current.penDrop = damp(current.penDrop, target.penDrop, 5, delta);
         current.penDepth = damp(current.penDepth, target.penDepth, 6, delta);
         current.takeover = damp(current.takeover, target.takeover, 12, delta);
         current.handoff = damp(current.handoff, target.handoff, 12, delta);

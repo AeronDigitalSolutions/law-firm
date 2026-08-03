@@ -112,7 +112,7 @@ function JusticeModel({ progressRef, chapterProgressRef, settleProgressRef }: He
     // Keep the complete figure inside the canvas in both chapters. The model
     // moves between composed positions rather than the canvas being translated.
     const heroX = viewport.width * 0.16;
-    const chapterX = -viewport.width * 0.17;
+    const chapterX = -viewport.width * 0.22;
     const enteringY = -viewport.height * 2.2;
     const chapterY = -viewport.height * 0.04;
     const chapterScale = MathUtils.lerp(1, 1.06, chapterProgress);

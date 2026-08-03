@@ -27,8 +27,11 @@ const DEPTH_PEN_ORIENTATION = new Euler(0, Math.PI / 2, 0);
 
 export type PenMotion = {
   vertical: number;
+  drop: number;
   depth: number;
   active: boolean;
+  tipX: number;
+  tipY: number;
 };
 
 type TunableMaterial = Material & {
@@ -109,6 +112,7 @@ function PenModel({ motionRef }: { motionRef: React.MutableRefObject<PenMotion> 
   const positionGroup = useRef<Group>(null);
   const orientationGroup = useRef<Group>(null);
   const spinGroup = useRef<Group>(null);
+  const projectedNib = useRef(new Vector3());
   const { camera, size, viewport } = useThree();
   const source = useGLTF(penModel).scene;
   const { model, radius, baseAlignment } = useMemo(() => {
@@ -194,7 +198,7 @@ function PenModel({ motionRef }: { motionRef: React.MutableRefObject<PenMotion> 
   useFrame((_, delta) => {
     if (!positionGroup.current || !orientationGroup.current || !spinGroup.current) return;
 
-    const { vertical, depth, active } = motionRef.current;
+    const { vertical, drop, depth, active } = motionRef.current;
     const initialX = viewport.width * 0.36;
     const initialY = -viewport.height * 0.23;
 
@@ -216,7 +220,7 @@ function PenModel({ motionRef }: { motionRef: React.MutableRefObject<PenMotion> 
     );
     positionGroup.current.position.y = MathUtils.damp(
       positionGroup.current.position.y,
-      MathUtils.lerp(initialY, 0, vertical),
+      MathUtils.lerp(initialY, 0, vertical) - viewport.height * 0.48 * drop,
       6,
       delta,
     );
@@ -226,6 +230,12 @@ function PenModel({ motionRef }: { motionRef: React.MutableRefObject<PenMotion> 
       6,
       delta,
     ));
+
+    // The normalized model's origin is the real nib point. Project that exact
+    // point into panel percentages so the CSS reveal always grows from the tip.
+    projectedNib.current.copy(positionGroup.current.position).project(camera);
+    motionRef.current.tipX = (projectedNib.current.x * 0.5 + 0.5) * 100;
+    motionRef.current.tipY = (-projectedNib.current.y * 0.5 + 0.5) * 100;
 
     const spinTarget = active ? 0 : PEN_SPIN_SPEED;
     spinGroup.current.rotation.y += MathUtils.damp(0, spinTarget, 7, delta) * delta;

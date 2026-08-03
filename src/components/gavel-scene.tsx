@@ -165,7 +165,12 @@ export function GavelScene({ motionRef }: GavelSceneProps) {
         camera={{ position: [0, 0, 8], fov: 31 }}
         dpr={1}
         gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
-        style={{ width: "100%", height: "100%", background: "transparent" }}
+        style={{
+          width: "100%",
+          height: "100%",
+          background: "transparent",
+          pointerEvents: "none",
+        }}
       >
         <hemisphereLight args={["#ffe8c6", "#180b03", 1.05]} />
         <ambientLight intensity={0.45} color="#ffeed8" />
