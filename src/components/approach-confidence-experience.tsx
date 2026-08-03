@@ -6,7 +6,6 @@ import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 
 import { Box3, Group, MathUtils, PerspectiveCamera, Vector3 } from "three";
 
 import ladyJusticeModel from "@/glb/Lady Justice.glb";
-import gavelModel from "@/glb/judges_gavel.glb";
 
 type Commitment = {
   value: string;
@@ -86,41 +85,6 @@ function JusticeModel({ active }: { active: boolean }) {
   );
 }
 
-function GavelModel({ active }: { active: boolean }) {
-  const source = useGLTF(gavelModel).scene;
-  const spinGroup = useRef<Group>(null);
-  const { camera, size } = useThree();
-
-  const { model, center, radius } = useMemo(() => {
-    const model = source.clone(true);
-    model.updateMatrixWorld(true);
-
-    const bounds = new Box3().setFromObject(model);
-    const center = bounds.getCenter(new Vector3());
-    const radius = bounds.getSize(new Vector3()).length() / 2;
-
-    return { model, center, radius };
-  }, [source]);
-
-  useLayoutEffect(() => {
-    frameCamera(camera as PerspectiveCamera, size.width, size.height, radius, center, 1.4);
-  }, [camera, center, radius, size.height, size.width]);
-
-  useFrame((_, delta) => {
-    if (spinGroup.current) {
-      spinGroup.current.rotation.y += delta * (active ? 0.42 : 0.08);
-    }
-  });
-
-  return (
-    <group ref={spinGroup} position={center}>
-      <group position={center.clone().multiplyScalar(-1)}>
-        <primitive object={model} />
-      </group>
-    </group>
-  );
-}
-
 function JusticeCanvas({ active }: { active: boolean }) {
   return (
     <Canvas
@@ -135,24 +99,6 @@ function JusticeCanvas({ active }: { active: boolean }) {
       <directionalLight color="#fffaf2" intensity={0.34} position={[0, 6, 1]} />
       <Suspense fallback={null}>
         <JusticeModel active={active} />
-      </Suspense>
-    </Canvas>
-  );
-}
-
-function GavelCanvas({ active }: { active: boolean }) {
-  return (
-    <Canvas
-      dpr={1}
-      camera={{ position: [0, 0, 8], fov: 31 }}
-      gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
-    >
-      <hemisphereLight args={["#fff6e6", "#1f0e05", 0.62]} />
-      <ambientLight color="#f8e8ce" intensity={0.3} />
-      <directionalLight color="#ffe2a5" intensity={1.25} position={[-4, 5, 6]} />
-      <directionalLight color="#c88a3f" intensity={0.55} position={[5, 2, -4]} />
-      <Suspense fallback={null}>
-        <GavelModel active={active} />
       </Suspense>
     </Canvas>
   );
@@ -220,9 +166,7 @@ export function ApproachConfidenceExperience({
           <div className="ac-model ac-lady-model">
             <JusticeCanvas active={phase === "approach"} />
           </div>
-          <div className="ac-model ac-gavel-model">
-            <GavelCanvas active={phase === "confidence"} />
-          </div>
+          <div className="ac-model ac-gavel-model" />
         </div>
 
         <div className="ac-layer">
@@ -271,9 +215,7 @@ export function ApproachConfidenceExperience({
               </a>
             </article>
 
-            <div className="ac-confidence-center-hammer" aria-hidden="true">
-              <GavelCanvas active={phase === "confidence"} />
-            </div>
+            <div className="ac-confidence-center-hammer" data-gavel-confidence-target aria-hidden="true" />
 
             <div className="ac-confidence-visual">
               <div className="ac-confidence-image-frame">
@@ -310,4 +252,3 @@ export function ApproachConfidenceExperience({
 }
 
 useGLTF.preload(ladyJusticeModel);
-useGLTF.preload(gavelModel);

@@ -76,18 +76,20 @@ export default function Home() {
 
       <header className="topbar">
         <a href="#top" className="brand-mark" aria-label="SCM Associates home">
-          <span className="brand-monogram">SCM</span>
-          <span className="brand-copy">Associates</span>
+          <img src="/images/logo.PNG" alt="SCM Associates Advocates & Legal Consultants" className="brand-logo-img" />
         </a>
 
-        <nav className="topnav" aria-label="Primary navigation">
+        <nav className="topnav-center" aria-label="Primary navigation">
           <a href="#about">Who we are</a>
           <a href="#practice">Practices</a>
           <a href="#approach">Our approach</a>
+        </nav>
+
+        <div className="topnav-right">
           <a href="#contact" className="nav-cta">
             Request consultation <span aria-hidden="true">↗</span>
           </a>
-        </nav>
+        </div>
       </header>
 
       <HeroExperience />
@@ -97,19 +99,21 @@ export default function Home() {
       <AboutExperience principles={principles} />
 
       <section id="practice" className="section practice-section" aria-labelledby="practice-title">
-        <Reveal className="practice-hero">
-          <div>
-            <p className="section-index">02 / Capabilities</p>
-            <h2 id="practice-title">
-              Counsel calibrated for the matter in front of you.
-            </h2>
-            <p>
-              SCM Associates advises clients who need legal clarity, courtroom
-              confidence, and commercially sound judgment in the same room.
-            </p>
-          </div>
+        <div className="practice-hero">
+          <Reveal>
+            <div>
+              <p className="section-index">02 / Capabilities</p>
+              <h2 id="practice-title">
+                Counsel calibrated for the matter in front of you.
+              </h2>
+              <p>
+                SCM Associates advises clients who need legal clarity, courtroom
+                confidence, and commercially sound judgment in the same room.
+              </p>
+            </div>
+          </Reveal>
           <div className="practice-gavel-target" data-gavel-target aria-hidden="true" />
-        </Reveal>
+        </div>
 
         <div className="practice-grid">
           {practiceAreas.map((area, index) => (

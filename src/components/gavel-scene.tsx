@@ -6,7 +6,6 @@ import {
   type MutableRefObject,
   Suspense,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useSyncExternalStore,
@@ -16,12 +15,12 @@ import {
   Box3,
   Group,
   MathUtils,
-  PerspectiveCamera,
   Vector3,
 } from "three";
 import gavelModel from "@/glb/judges_gavel.glb";
 
-const GAVEL_ROTATION_SPEED = MathUtils.degToRad(7);
+const GAVEL_ROTATION_SPEED = MathUtils.degToRad(12);
+const GAVEL_SIZE_SCALE = 0.765;
 
 export type GavelMotion = {
   takeover: number;
@@ -30,14 +29,14 @@ export type GavelMotion = {
 };
 
 type GavelSceneProps = {
-  motionRef: MutableRefObject<GavelMotion>;
+  motionRef?: MutableRefObject<GavelMotion>;
 };
 
-type ViewRect = {
-  left: number;
-  top: number;
+type GavelScreenState = {
+  x: number;
+  y: number;
   width: number;
-  height: number;
+  opacity: number;
 };
 
 const clamp = (v: number) => Math.min(1, Math.max(0, v));
@@ -46,47 +45,13 @@ function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
 }
 
-/** Smooth ease-in-out for the travel curve. */
 function smoothstep(t: number): number {
   return t * t * (3 - 2 * t);
 }
 
-/** Viewport-centred rect where the gavel begins. */
-function getSourceRect(vp: { width: number; height: number }): ViewRect {
-  const slotEl = typeof document !== "undefined" ? document.querySelector<HTMLElement>("[data-gavel-source-slot]") : null;
-  if (slotEl) {
-    const sb = slotEl.getBoundingClientRect();
-    if (sb.width > 0 && sb.height > 0) {
-      return {
-        left: sb.left,
-        top: sb.top,
-        width: sb.width,
-        height: sb.height,
-      };
-    }
-  }
-  const w = Math.min(Math.max(vp.width * 0.28, 320), 460);
-  const h = Math.min(Math.max(vp.height * 0.24, 200), 280);
-  return {
-    left: (vp.width - w) / 2,
-    top: vp.height * 0.62,
-    width: w,
-    height: h,
-  };
-}
-
-/** Fallback when [data-gavel-target] does not exist in the DOM. */
-function getFallbackTarget(vp: { width: number; height: number }): ViewRect {
-  return {
-    left: vp.width * 0.57,
-    top: vp.height * 0.26,
-    width: vp.width * 0.31,
-    height: vp.height * 0.45,
-  };
-}
-
 export function GavelScene({ motionRef }: GavelSceneProps) {
   const layerRef = useRef<HTMLDivElement>(null);
+  const screenStateRef = useRef<GavelScreenState>({ x: 0, y: 0, width: 320, opacity: 0 });
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -104,50 +69,71 @@ export function GavelScene({ motionRef }: GavelSceneProps) {
       }
 
       const vp = { width: window.innerWidth, height: window.innerHeight };
-      const source = getSourceRect(vp);
-      const takeover = clamp(motionRef.current.takeover);
+      const slotA = typeof document !== "undefined" ? document.querySelector<HTMLElement>("[data-gavel-source-slot]") : null;
+      const slotB = typeof document !== "undefined" ? document.querySelector<HTMLElement>("[data-gavel-target]") : null;
+      const slotC = typeof document !== "undefined" ? document.querySelector<HTMLElement>("[data-gavel-confidence-target]") : null;
+      const approachZone = slotC?.closest<HTMLElement>(".ac-zone");
+      const confidenceZone = slotC?.closest<HTMLElement>(".ac-zone");
+      const confidenceStage = slotC?.closest<HTMLElement>(".ac-stage");
+      const confidencePhase = confidenceStage?.dataset.phase;
 
-      /* ---- Measure target every frame for scroll-locked accuracy ---- */
-      const el = document.querySelector<HTMLElement>("[data-gavel-target]");
-      const tb = el?.getBoundingClientRect();
-      const target: ViewRect = tb
-        ? { left: tb.left, top: tb.top, width: tb.width, height: tb.height }
-        : getFallbackTarget(vp);
+      const rectB = slotB?.getBoundingClientRect();
+      const rectC = slotC?.getBoundingClientRect();
+      const approachZoneRect = approachZone?.getBoundingClientRect();
+      const confidenceZoneRect = confidenceZone?.getBoundingClientRect();
 
-      /* ---- Scroll-locked handoff ----
-       * Driven entirely by how far the target element's vertical centre
-       * has risen from the viewport bottom toward the source centre.
-       *
-       *   target centre at / below viewport bottom  →  handoff = 0  (gavel centred)
-       *   target centre at source centre             →  handoff = 1  (gavel at target)
-       *
-       * This means the gavel stays centred on the brown screen until
-       * the practice section actually scrolls into view, then glides
-       * smoothly to the target in lockstep with the scroll.
-       */
-      const srcCY = source.top + source.height / 2;
-      const tgtCY = target.top + target.height / 2;
-      const maxTravel = vp.height - srcCY;
-      const currentTravel = vp.height - tgtCY;
-      const rawHandoff = clamp(currentTravel / Math.max(maxTravel, 1));
-      const handoff = smoothstep(rawHandoff);
+      const sourceX = vp.width * 0.5;
+      const sourceY = vp.height * 0.79;
+      const sourceWidth = MathUtils.clamp(vp.width * 0.19, 270, 390);
+      let x = sourceX;
+      let y = sourceY;
+      let width = sourceWidth;
+      let opacity = slotA
+        ? clamp(((motionRef?.current.takeover ?? 1) - 0.05) / 0.3)
+        : 0;
 
-      /* ---- Interpolate rect directly (no transform / scale hacks) ---- */
-      const l = lerp(source.left, target.left, handoff);
-      const t = lerp(source.top, target.top, handoff);
-      const w = lerp(source.width, target.width, handoff);
-      const h = lerp(source.height, target.height, handoff);
+      if (rectB) {
+        const handoff = smoothstep(clamp((vp.height * 1.08 - rectB.top) / (vp.height * 0.82)));
+        const targetWidth = MathUtils.clamp(rectB.width * 0.7, 280, 430);
+        const safeHalfWidth = targetWidth * 0.53;
+        const targetX = MathUtils.clamp(rectB.left + rectB.width / 2, safeHalfWidth, vp.width - safeHalfWidth);
+        // Once the handoff completes, follow the target's document position.
+        // The gavel is then visually part of the capabilities hero: it scrolls
+        // upward with that section and naturally exits the viewport with it.
+        const targetY = rectB.top + rectB.height / 2;
 
-      layer.style.left = `${l}px`;
-      layer.style.top = `${t}px`;
-      layer.style.width = `${w}px`;
-      layer.style.height = `${h}px`;
-      layer.style.transform = "none";
-      layer.style.clipPath = "none";
+        x = lerp(sourceX, targetX, handoff);
+        y = lerp(sourceY, targetY, handoff);
+        width = lerp(sourceWidth, targetWidth, handoff);
+      }
 
-      /* Fade in once the brown takeover circle is large enough to
-         fully cover the canvas area — avoids a rectangular flash. */
-      layer.style.opacity = clamp((takeover - 0.45) / 0.35).toFixed(3);
+      // Section 03 owns the viewport once it approaches the sticky threshold.
+      // Fade the gavel before that point and keep it absent throughout Approach.
+      if (approachZoneRect) {
+        const approachVisibility = clamp(
+          (approachZoneRect.top - vp.height * 0.08) / (vp.height * 0.42),
+        );
+        opacity *= approachVisibility;
+      }
+
+      // Section 04 uses its own deterministic anchor and is never interpolated
+      // from a stale rectangle left behind by the earlier sections.
+      if (confidencePhase === "confidence" && rectC) {
+        const confidenceWidth = MathUtils.clamp(rectC.width * 0.72, 280, 430) * 0.5;
+        const safeHalfWidth = confidenceWidth * 0.53;
+        x = MathUtils.clamp(rectC.left + rectC.width / 2, safeHalfWidth, vp.width - safeHalfWidth);
+        // Stay attached to Section 04. When its sticky stage releases, the
+        // gavel follows the section upward and exits instead of remaining pinned.
+        y = rectC.top + rectC.height / 2;
+        width = confidenceWidth;
+        opacity = confidenceZoneRect
+          ? clamp(confidenceZoneRect.bottom / (vp.height * 0.22))
+          : 1;
+      }
+
+      screenStateRef.current = { x, y, width: width * GAVEL_SIZE_SCALE, opacity };
+      layer.style.opacity = opacity.toFixed(3);
+      layer.style.visibility = opacity < 0.01 ? "hidden" : "visible";
 
       frame = requestAnimationFrame(updateLayer);
     };
@@ -161,22 +147,32 @@ export function GavelScene({ motionRef }: GavelSceneProps) {
   return createPortal(
     <div
       ref={layerRef}
-      className="about-gavel gavel-floating-layer"
+      className="gavel-floating-layer"
       aria-label="Three-dimensional judge's gavel"
-      style={{ opacity: 0 }}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 99,
+        pointerEvents: "none",
+        overflow: "hidden",
+        contain: "strict",
+        width: "100vw",
+        height: "100dvh",
+        willChange: "opacity",
+      }}
     >
       <Canvas
         camera={{ position: [0, 0, 8], fov: 31 }}
         dpr={1}
         gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
-        style={{ background: "transparent" }}
+        style={{ width: "100%", height: "100%", background: "transparent" }}
       >
         <hemisphereLight args={["#ffe8c6", "#180b03", 1.05]} />
         <ambientLight intensity={0.45} color="#ffeed8" />
         <directionalLight position={[-4, 6, 7]} intensity={2.25} color="#fff1da" />
         <directionalLight position={[5, 1, 4]} intensity={1.1} color="#d99449" />
         <Suspense fallback={null}>
-          <GavelModel />
+          <GavelModel screenStateRef={screenStateRef} />
         </Suspense>
       </Canvas>
     </div>,
@@ -184,49 +180,51 @@ export function GavelScene({ motionRef }: GavelSceneProps) {
   );
 }
 
-function GavelModel() {
+function GavelModel({
+  screenStateRef,
+}: {
+  screenStateRef: MutableRefObject<GavelScreenState>;
+}) {
+  const positionGroup = useRef<Group>(null);
   const spinGroup = useRef<Group>(null);
-  const { camera, size } = useThree();
+  const { size, viewport } = useThree();
   const source = useGLTF(gavelModel).scene;
-  const { model, center, radius } = useMemo(() => {
+  const { model, center, modelWidth } = useMemo(() => {
     const model = source.clone(true);
     model.updateMatrixWorld(true);
 
     const bounds = new Box3().setFromObject(model);
     const center = bounds.getCenter(new Vector3());
-    const radius = bounds.getSize(new Vector3()).length() / 2;
+    const modelWidth = Math.max(bounds.getSize(new Vector3()).x, 0.001);
 
-    return { model, center, radius };
+    return { model, center, modelWidth };
   }, [source]);
 
-  useLayoutEffect(() => {
-    if (!(camera instanceof PerspectiveCamera)) return;
-
-    const verticalFov = MathUtils.degToRad(camera.fov);
-    const horizontalFov = 2 * Math.atan(
-      Math.tan(verticalFov / 2) * (size.width / size.height),
-    );
-    const distance = Math.max(
-      radius / Math.sin(verticalFov / 2),
-      radius / Math.sin(horizontalFov / 2),
-    ) * 1.18;
-
-    camera.position.set(center.x, center.y, center.z + distance);
-    camera.lookAt(center);
-    camera.updateProjectionMatrix();
-  }, [camera, center, radius, size.height, size.width]);
-
   useFrame((_, delta) => {
-    if (!spinGroup.current) return;
+    if (!positionGroup.current || !spinGroup.current) return;
 
+    const target = screenStateRef.current;
+    const worldX = (target.x / Math.max(size.width, 1) - 0.5) * viewport.width;
+    const worldY = (0.5 - target.y / Math.max(size.height, 1)) * viewport.height;
+    const worldWidth = (target.width / Math.max(size.width, 1)) * viewport.width;
+    const scale = worldWidth / modelWidth;
+
+    // Position and scale are direct functions of scroll. Reversing scroll can
+    // no longer leave the model chasing an old target.
+    positionGroup.current.position.set(worldX, worldY, 0);
+    positionGroup.current.scale.setScalar(scale);
     spinGroup.current.rotation.y += GAVEL_ROTATION_SPEED * delta;
   });
 
   return (
-    <group ref={spinGroup} position={center}>
-      <group position={center.clone().multiplyScalar(-1)}>
-        <primitive object={model} />
+    <group ref={positionGroup}>
+      <group ref={spinGroup}>
+        <group position={center.clone().multiplyScalar(-1)}>
+          <primitive object={model} />
+        </group>
       </group>
     </group>
   );
 }
+
+useGLTF.preload(gavelModel);
