@@ -7,6 +7,7 @@ import { Preloader } from "@/components/preloader";
 import { Reveal } from "@/components/reveal";
 import { PracticeTile } from "@/components/practice-tile";
 import { SiteFooter } from "@/components/site-footer";
+import { HomepageSwitcher } from "@/components/homepage-switcher";
 
 const practiceAreas = [
   {
@@ -85,6 +86,7 @@ export default function Home() {
             <a href="#about">Who we are</a>
             <a href="#practice">Practices</a>
             <a href="#approach">Our approach</a>
+            <HomepageSwitcher />
           </nav>
 
           <div className="topnav-right">

@@ -64,6 +64,15 @@ body::before {
 a { color: inherit; text-decoration: none; }
 p { margin: 0; color: var(--ink-soft); line-height: 1.68; }
 
+.homepage-switcher { position: relative; }
+.homepage-switcher summary { display: flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0; border-bottom: 1px solid rgba(90, 31, 38, 0.35); cursor: pointer; list-style: none; white-space: nowrap; }
+.homepage-switcher summary::-webkit-details-marker { display: none; }
+.homepage-switcher summary span { transition: transform 220ms ease; }
+.homepage-switcher[open] summary span { transform: rotate(180deg); }
+.homepage-switcher-menu { position: absolute; z-index: 80; top: calc(100% + 0.7rem); right: 0; display: grid; width: 10rem; padding: 0.45rem; border: 1px solid rgba(108, 74, 55, 0.2); border-radius: 0.5rem; background: var(--paper); box-shadow: 0 1rem 2.4rem rgba(43, 18, 21, 0.14); }
+.homepage-switcher-menu a { padding: 0.7rem 0.75rem; border-radius: 0.3rem; font-size: 0.74rem; text-transform: none; letter-spacing: 0; }
+.homepage-switcher-menu a:hover, .homepage-switcher-menu a:focus-visible { color: var(--paper); background: var(--maroon); outline: none; }
+
 /* ── Preloader ── */
 .preloader {
   position: fixed;
