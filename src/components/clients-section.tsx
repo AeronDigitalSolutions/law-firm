@@ -111,6 +111,14 @@ export const clientLogos = [
   },
 ];
 
+export function ClientLogo({ name }: { name: string }) {
+  const client = clientLogos.find((item) => item.name === name);
+
+  if (!client) return null;
+
+  return <>{client.svg}</>;
+}
+
 export function ClientsSection() {
   // Multiply the track array so the infinite marquee train is 100% gapless & seamless
   const marqueeItems = [...clientLogos, ...clientLogos, ...clientLogos];
