@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ContactSection } from "@/components/contact-section";
-import { ClientLogo } from "@/components/clients-section";
+import { ClientLogoMarquee } from "@/components/clients-section";
 import { HomeTwoMotion } from "@/components/home-two-motion";
 import { HomeTwoGavelScene } from "@/components/home-two-gavel-scene";
 import { HomeTwoJusticeScene } from "@/components/home-two-justice-scene";
+import { HomeTwoPenScene } from "@/components/home-two-pen-scene";
 import { HomepageSwitcher } from "@/components/homepage-switcher";
 import styles from "./home2.module.css";
 
@@ -16,8 +17,6 @@ const services = [
   ["Contracts and risk", "Drafting, review, negotiation, and practical allocation of commercial risk."],
   ["Private matters", "Confidential advice for individuals and families where discretion matters most."],
 ];
-
-const clientNames = ["ESSAR", "JSW", "USV", "Fino Payments Bank", "FiatPe"];
 
 export default function HomeTwo() {
   return (
@@ -73,11 +72,8 @@ export default function HomeTwo() {
           </aside>
 
           <aside className={styles.showcaseCounsel} data-motion="showcase-detail">
-            <div className={styles.counselPortrait}>
-              <Image src="/images/rahul-mishra-portrait.png" alt="Adv. Rahul S. Mishra" fill sizes="9rem" />
-              <span aria-hidden="true">↗</span>
-            </div>
-            <div><strong>Protecting every<br />decision you make</strong><a href="#leadership-two">Meet our counsel</a></div>
+            <div className={styles.counselPen}><HomeTwoPenScene /></div>
+            <div><strong>Two generations.<br />One standard of counsel.</strong><a href="#leadership-two">Meet our counsel</a></div>
           </aside>
 
           <div className={styles.showcaseSocials} data-motion="showcase-detail" aria-label="Social links">
@@ -113,7 +109,11 @@ export default function HomeTwo() {
       <section id="about-two" className={styles.statement} data-motion="statement">
         <div className={styles.logoStrip} aria-label="Selected clients" data-motion="clients">
           <span>Trusted by industry leaders</span>
-              {clientNames.map((client) => <div key={client} data-motion="client"><ClientLogo name={client} /></div>)}
+          <ClientLogoMarquee
+            className={styles.logoMarquee}
+            trackClassName={styles.logoMarqueeTrack}
+            itemClassName={styles.logoCard}
+          />
         </div>
         <div className={styles.statementBody}>
           <div className={styles.statementCopy}>

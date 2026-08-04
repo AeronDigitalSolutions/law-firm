@@ -119,6 +119,30 @@ export function ClientLogo({ name }: { name: string }) {
   return <>{client.svg}</>;
 }
 
+export function ClientLogoMarquee({
+  className,
+  trackClassName,
+  itemClassName,
+}: {
+  className?: string;
+  trackClassName?: string;
+  itemClassName?: string;
+}) {
+  const marqueeItems = [...clientLogos, ...clientLogos, ...clientLogos];
+
+  return (
+    <div className={className} aria-label="SCM Associates clients">
+      <div className={trackClassName}>
+        {marqueeItems.map((client, index) => (
+          <div key={`${client.name}-${index}`} className={itemClassName} data-motion="client">
+            {client.svg}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function ClientsSection() {
   // Multiply the track array so the infinite marquee train is 100% gapless & seamless
   const marqueeItems = [...clientLogos, ...clientLogos, ...clientLogos];

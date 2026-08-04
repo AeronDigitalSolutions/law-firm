@@ -2,6 +2,7 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
+import { FiberProvider } from "its-fine";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Box3, Group, Vector3 } from "three";
 import gavelModel from "@/glb/judges_gavel.glb";
@@ -31,20 +32,22 @@ export function HomeTwoGavelScene() {
   return (
     <div ref={containerRef} className="home-two-gavel" aria-label="Rotating three-dimensional judge's gavel">
       {active ? (
-        <Canvas
-          camera={{ position: [0, 0, 6.6], fov: 30 }}
-          dpr={[1, 1.35]}
-          gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-          style={{ background: "transparent", pointerEvents: "none" }}
-        >
-          <ambientLight intensity={0.62} color="#fff4e5" />
-          <hemisphereLight args={["#fff7ec", "#24100b", 1.15]} />
-          <directionalLight position={[-4, 6, 5]} intensity={2.2} color="#fff0d8" />
-          <directionalLight position={[5, 1, 4]} intensity={1.05} color="#b89a63" />
-          <Suspense fallback={null}>
-            <RotatingGavel />
-          </Suspense>
-        </Canvas>
+        <FiberProvider>
+          <Canvas
+            camera={{ position: [0, 0, 6.6], fov: 30 }}
+            dpr={[1, 1.35]}
+            gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+            style={{ background: "transparent", pointerEvents: "none" }}
+          >
+            <ambientLight intensity={0.62} color="#fff4e5" />
+            <hemisphereLight args={["#fff7ec", "#24100b", 1.15]} />
+            <directionalLight position={[-4, 6, 5]} intensity={2.2} color="#fff0d8" />
+            <directionalLight position={[5, 1, 4]} intensity={1.05} color="#b89a63" />
+            <Suspense fallback={null}>
+              <RotatingGavel />
+            </Suspense>
+          </Canvas>
+        </FiberProvider>
       ) : null}
     </div>
   );
