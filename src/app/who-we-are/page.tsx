@@ -24,7 +24,7 @@ export default function WhoWeArePage() {
           <Link className="interior-hero-link" href="/our-approach">How we work</Link>
         </div>
         <div className="interior-hero-media">
-          <Image src="/images/firm-consultation-portrait.jpg" alt="A focused legal consultation at SCM Associates" fill priority sizes="(max-width: 960px) 100vw, 52vw" />
+          <Image src="/images/firm-consultation-portrait.jpg" alt="A focused legal consultation at SCM Associates." fill priority sizes="(max-width: 960px) 100vw, 52vw" />
         </div>
       </section>
 
