@@ -27,9 +27,9 @@ export default function HomeTwo() {
           <Image src="/images/logo.PNG" alt="SCM Associates" width={360} height={280} priority />
         </Link>
         <nav className={styles.nav} aria-label="Homepage 2 navigation" data-motion="header-nav">
-          <a href="#about-two">Who we are</a>
-          <a href="#services-two">Practices</a>
-          <a href="#leadership-two">Our approach</a>
+          <Link href="/who-we-are">Who we are</Link>
+          <Link href="/practices">Practices</Link>
+          <Link href="/our-approach">Our approach</Link>
           <HomepageSwitcher />
         </nav>
         <a className={styles.headerCta} href="#contact-two" data-motion="header-cta">Request consultation</a>
@@ -167,7 +167,7 @@ export default function HomeTwo() {
       </section>
 
       <div id="contact-two" className={styles.contactWrap} data-motion="contact"><ContactSection /></div>
-      <footer className={styles.footer} data-motion="footer"><strong>SCM Associates</strong><p>Strategic counsel. Commercial judgment. Trusted representation.</p><nav><Link href="/">Homepage 1</Link><Link href="/home-2">Homepage 2</Link><a href="#services-two">Practices</a><a href="#contact-two">Contact</a></nav><span>© {new Date().getFullYear()} SCM Associates</span></footer>
+      <footer className={styles.footer} data-motion="footer"><strong>SCM Associates</strong><p>Strategic counsel. Commercial judgment. Trusted representation.</p><nav><Link href="/who-we-are">Who we are</Link><Link href="/practices">Practices</Link><Link href="/our-approach">Our approach</Link><a href="#contact-two">Contact</a></nav><span>© {new Date().getFullYear()} SCM Associates</span></footer>
     </main>
   );
 }
