@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { AboutExperience } from "@/components/about-experience";
 import { ApproachConfidenceExperience } from "@/components/approach-confidence-experience";
 import { ClientsSection } from "@/components/clients-section";
@@ -83,9 +84,9 @@ export default function Home() {
 
         <div className="header-actions">
           <nav className="topnav-center" aria-label="Primary navigation">
-            <a href="#about">Who we are</a>
-            <a href="#practice">Practices</a>
-            <a href="#approach">Our approach</a>
+            <Link href="/who-we-are">Who we are</Link>
+            <Link href="/practices">Practices</Link>
+            <Link href="/our-approach">Our approach</Link>
             <HomepageSwitcher />
           </nav>
 

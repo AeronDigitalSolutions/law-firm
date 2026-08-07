@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export function SiteFooter() {
   return (
     <footer className="dark-site-footer">
@@ -17,9 +19,9 @@ export function SiteFooter() {
           <div className="dark-footer-col">
             <span className="dark-footer-title">NAVIGATE</span>
             <ul className="dark-footer-links">
-              <li><a href="#about">The Firm</a></li>
-              <li><a href="#practice">Capabilities</a></li>
-              <li><a href="#approach">Our Approach</a></li>
+              <li><Link href="/who-we-are">The Firm</Link></li>
+              <li><Link href="/practices">Capabilities</Link></li>
+              <li><Link href="/our-approach">Our Approach</Link></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
           </div>
